@@ -1,0 +1,103 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/auth/sign_up":
+    post:
+      summary: Creates a user
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '201':
+          description: user created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+                  required:
+                  - email
+                  - password
+                  - password_confirmation
+              required:
+              - user
+  "/api/v1/auth/sign_in":
+    post:
+      summary: Signs in a user
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: user signed in
+        '401':
+          description: invalid credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                  required:
+                  - email
+                  - password
+              required:
+              - user
+  "/api/v1/auth/sign_out":
+    delete:
+      summary: Signs out a user
+      tags:
+      - Authentication
+      security:
+      - Bearer: {}
+      responses:
+        '200':
+          description: user signed out
+        '401':
+          description: user not signed in
+  "/api/v1/auth/me":
+    get:
+      summary: Gets current user profile
+      tags:
+      - Authentication
+      security:
+      - Bearer: {}
+      responses:
+        '200':
+          description: user profile
+        '401':
+          description: user not signed in
+components:
+  securitySchemes:
+    Bearer:
+      description: JWT Authorization header using the Bearer scheme.
+      type: apiKey
+      name: Authorization
+      in: header
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:3000
