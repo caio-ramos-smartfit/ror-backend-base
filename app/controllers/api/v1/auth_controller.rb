@@ -1,5 +1,4 @@
 class Api::V1::AuthController < ApplicationController
-  skip_before_action :verify_authenticity_token, if: -> { request.format.json? }
   before_action :authenticate_user!, except: [:sign_up, :sign_in]
 
   # POST /api/v1/auth/sign_up
