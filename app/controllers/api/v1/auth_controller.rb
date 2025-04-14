@@ -15,8 +15,10 @@ class Api::V1::AuthController < ApplicationController
   def login
     user = User.find_by(email: params[:user][:email])
     if user&.valid_password?(params[:user][:password])
-      sign_in(user)
-      token = request.env['warden-jwt_auth.token']
+      token = JWT.encode(
+        { sub: user.id, exp: 24.hours.from_now.to_i },
+        Rails.application.credentials.secret_key_base || 'development_jwt_secret'
+      )
       render json: { message: 'Signed in successfully', token: token }, status: :ok
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
@@ -26,7 +28,6 @@ class Api::V1::AuthController < ApplicationController
   # DELETE /api/v1/auth/sign_out
   def sign_out
     if current_user
-      sign_out(current_user)
       render json: { message: 'Signed out successfully' }, status: :ok
     else
       render json: { error: 'User not signed in' }, status: :unauthorized
