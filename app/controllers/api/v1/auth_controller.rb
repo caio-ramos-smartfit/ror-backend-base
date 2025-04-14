@@ -1,5 +1,5 @@
 class Api::V1::AuthController < ApplicationController
-  before_action :authenticate_user!, except: [:sign_up, :sign_in]
+  before_action :authenticate_user!, except: [:sign_up, :login]
 
   # POST /api/v1/auth/sign_up
   def sign_up
@@ -12,7 +12,7 @@ class Api::V1::AuthController < ApplicationController
   end
 
   # POST /api/v1/auth/sign_in
-  def sign_in
+  def login
     user = User.find_by(email: params[:user][:email])
     if user&.valid_password?(params[:user][:password])
       sign_in(user)
