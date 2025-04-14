@@ -36,7 +36,11 @@ class Api::V1::AuthController < ApplicationController
 
   # GET /api/v1/auth/me
   def me
-    render json: current_user, status: :ok
+    render json: { 
+      id: current_user.id, 
+      email: current_user.email, 
+      created_at: current_user.created_at 
+    }, status: :ok
   end
 
   private
